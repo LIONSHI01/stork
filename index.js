@@ -585,8 +585,14 @@ if (!isMainThread) {
 
   async function main() {
     if (!validateConfig()) {
-      process.exit(1);
+      setInterval(async () => {
+        await tokenManager.getValidToken();
+        log("通过 Cognito 刷新令牌");
+      }, 50 * 60 * 1000);
     }
+    // if (!validateConfig()) {
+    //   process.exit(1);
+    // }
 
     log(`正在处理 ${accounts[jobs].username}`);
     const tokenManager = new TokenManager(jobs);
@@ -607,7 +613,11 @@ if (!isMainThread) {
       }, 50 * 60 * 1000);
     } catch (error) {
       log(`应用程序启动失败: ${error.message}`, "错误");
-      process.exit(1);
+      // process.exit(1);
+      setInterval(async () => {
+        await tokenManager.getValidToken();
+        log("通过 Cognito 刷新令牌");
+      }, 50 * 60 * 1000);
     }
   }
 
